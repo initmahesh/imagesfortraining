@@ -1,6 +1,2 @@
-#install Python3  and pip3 
-sudo apt-get update 
-sudo apt-get install python3-pip
-
-pip3 install opencv-python
-pip3 install --upgrade azure-storage
+opencv-python
+azure-storage
