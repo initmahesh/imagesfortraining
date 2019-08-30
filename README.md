@@ -1,18 +1,25 @@
 
-This script captures from RTSP or USB camera connected to device and sends images to azure blob.
+This script captures images from RTSP or USB camera connected to device and sends images to azure blob as per credentials providedin constants.py
+
 
 Prerequiste 
-    python3 :: installon windows using link https://www.python.org/downloads/windows/
+    python3
+    pip3 
 
-install following packages
+How to run this sample
+
+1. Clone this repo
+2. Update constants.py with your storage acount credentials 
+3. Install following packages
 
     pip3 install opencv-python
     
     pip3 install --upgrade azure-storage
+4. for using manual mode use below command only once to allow opencv to open windows on host 
 
-How to use 
+    sudo xhost +
 
-    on device 
+5. start the script
     
         python3 edge_to_blob.py -s "usb" -t 4 -m True
             -s == sets the source replace with rtsp strema address in case you want images from rtsp stream
