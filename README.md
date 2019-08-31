@@ -9,7 +9,7 @@ Prerequiste
 How to run this sample
 
 1. Clone this repo
-2. Update constants.py with your storage acount credentials 
+2. Update .env file with your storage acount credentials 
 3. Install following packages
 
     pip3 install opencv-python

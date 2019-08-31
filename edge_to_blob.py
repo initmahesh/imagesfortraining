@@ -2,13 +2,22 @@ import cv2
 import os, uuid, sys, time, socket, shutil, argparse, math
 from azure.storage.blob import BlockBlobService, PublicAccess
 from azure.storage.queue import QueueService
-from constants import STORAGE_ACCOUNT_KEY,STORAGE_ACCOUNT_NAME,STORAGE_ACCOUNT_SUFFIX
+from dotenv import load_dotenv
+
+#reading parametes from .env file 
+load_dotenv()
+
+STORAGE_ACCOUNT_NAME = os.getenv('STORAGE_ACCOUNT_NAME')
+STORAGE_ACCOUNT_KEY = os.getenv('STORAGE_ACCOUNT_KEY')
+STORAGE_ACCOUNT_SUFFIX = os.getenv('STORAGE_ACCOUNT_SUFFIX')
 
 container_name = None 
 queue_service = None
 block_blob_service = None
 queue_service = None
 manual_mode = None
+
+
 
 #Parsing command line parameters
 parser = argparse.ArgumentParser(description= "This sample takes rtsp stream address as argument and send images to azureblob")
