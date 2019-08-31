@@ -1,3 +1,4 @@
 
 opencv-python
 azure-storage
+python-dotenv

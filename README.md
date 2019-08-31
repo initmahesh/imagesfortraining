@@ -9,12 +9,9 @@ Prerequiste
 How to run this sample
 
 1. Clone this repo
-2. Update .env file with your storage acount credentials 
-3. Install following packages
-
-    pip3 install opencv-python
-    
-    pip3 install --upgrade azure-storage
+2. Update .env file with required setting to run the script  
+3. Install following packages in requirements.txt
+    pip3 install -r requirements.txt
 4. for using manual mode use below command only once to allow opencv to open windows on host 
 
     sudo xhost +
