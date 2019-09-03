@@ -3,30 +3,28 @@
 This script and docker container captures images from RTSP or USB camera connected to device and sends images to azure blob as per credentials provided in .env file
 
 ###### Runing using Docker 
-       - Clone this repo
-       - Make sure you modufy the .env file your storage credentials
-       - If using manual mode use below command to allow display to work from container 
-              sudo xhost +
-       - sudo docker run --rm -it -e DISPLAY=:0 --ipc host -v /tmp/.X11-unix:/tmp/.X11-unix --network host --privileged -v /dev:/dev --env-file .env initmahesh/getimagefromedge:0.1
+1. Clone this repo
+2. Make sure you modufy the .env file your storage credentials
+3. If using manual mode use below command to allow display to work from container 
+              **sudo xhost +**
+4. Use below command to download and run the docker container
+      -       sudo docker run --rm -it -e DISPLAY=:0 --ipc host -v /tmp/.X11-unix:/tmp/.X11-unix --network host --privileged -v /dev:/dev --env-file .env initmahesh/getimagefromedge:0.1
 
 ###### Runing with python 
 
-    Prerequiste 
-        python3
-        pip3 
+ Prerequiste 
+    python3
+    pip3 
 
-    How to run this sample
+ How to run this sample
 
-    1. Clone this repo
-    2. Update .env file with required setting to run the script
-    3. Install following packages in requirements.txt
-        pip3 install -r requirements.txt
-    4. for using manual mode use below command only once to allow opencv to open windows on host 
-
-        sudo xhost +
-
-    5. start the script
-
-            python3 edge_to_blob.py 
+   1. Clone this repo
+   2. **Update .env file with required setting to run the script**
+   3. Install following packages in requirements.txt
+       -      pip3 install -r requirements.txt
+   4. for using manual mode use below command only once to allow opencv to open windows on host 
+        -     sudo xhost +
+   5. start the script
+         -    python3 edge_to_blob.py 
 
 
