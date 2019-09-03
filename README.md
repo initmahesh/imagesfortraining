@@ -1,29 +1,27 @@
+#### Project Title
+This script and docker container captures images from RTSP or USB camera connected to device and sends images to azure blob as per credentials provided in .env file
 
-This script captures images from RTSP or USB camera connected to device and sends images to azure blob as per credentials providedin constants.py
+###### Run using Docker 
+1. Clone this repo
+2. **Make sure you modify the .env file with your storage credentials**
+3. If using manual mode use below command to allow display to work from container 
+              **sudo xhost +**
+4. Use below command to download and run the docker container
+      -       sudo docker run --rm -it -e DISPLAY=:0 --ipc host -v /tmp/.X11-unix:/tmp/.X11-unix --network host --privileged -v /dev:/dev --env-file .env initmahesh/getimagefromedge:0.1
 
+###### Run with python 
 
-Prerequiste 
+ Prerequiste 
     python3
     pip3 
 
-How to run this sample
+ How to run this sample
 
-1. Clone this repo
-2. Update .env file with your storage acount credentials 
-3. Install following packages
-
-    pip3 install opencv-python
-    
-    pip3 install --upgrade azure-storage
-4. for using manual mode use below command only once to allow opencv to open windows on host 
-
-    sudo xhost +
-
-5. start the script
-    
-        python3 edge_to_blob.py -s "usb" -t 4 -m True
-            -s == sets the source replace with rtsp strema address in case you want images from rtsp stream
-            -t == sets the time delay between transfer to blob 4 means we will capture images every 4 sec and send to cloud
-            -m = manual mode open a window and only sends an image when user press SPACE and stop at ESC 
-
-
+   1. Clone this repo
+   2. **Update .env file with required setting to run the script**
+   3. Install following packages in requirements.txt
+       -      pip3 install -r requirements.txt
+   4. For using manual mode use below command only once to allow opencv to open windows on host 
+        -     sudo xhost +
+   5. Start the script
+         -    python3 edge_to_blob.py 
