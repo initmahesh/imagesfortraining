@@ -3,7 +3,7 @@ This script and docker container captures images from RTSP or USB camera connect
 
 ###### Run using Docker 
 1. Clone this repo
-2. Make sure you modify the .env file with your storage credentials
+2. **Make sure you modify the .env file with your storage credentials**
 3. If using manual mode use below command to allow display to work from container 
               **sudo xhost +**
 4. Use below command to download and run the docker container
