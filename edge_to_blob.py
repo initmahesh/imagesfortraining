@@ -6,10 +6,12 @@ from dotenv import load_dotenv
 
 #reading parametes from .env file 
 load_dotenv()
+
 #Storage account credentials to load files 
 STORAGE_ACCOUNT_NAME = os.getenv('STORAGE_ACCOUNT_NAME')
 STORAGE_ACCOUNT_KEY = os.getenv('STORAGE_ACCOUNT_KEY')
 STORAGE_ACCOUNT_SUFFIX = os.getenv('STORAGE_ACCOUNT_SUFFIX')
+
 #input to take frames support usb and rtsp address  
 SOURCE = os.getenv('SOURCE')
 #time to wait between image uploads as numeric value example 2 will upload an image every 2 secs
@@ -22,11 +24,10 @@ queue_service = None
 block_blob_service = None
 queue_service = None
 
-
+#this function creates storage container and queue service required 
 def __createstorage():
     global container_name
     global queue_service
-    global SOURCE
     global block_blob_service
     global queue_service 
     block_blob_service = BlockBlobService(account_name=STORAGE_ACCOUNT_NAME, account_key=STORAGE_ACCOUNT_KEY, endpoint_suffix=STORAGE_ACCOUNT_SUFFIX)
@@ -36,6 +37,7 @@ def __createstorage():
     block_blob_service.set_container_acl(container_name, public_access=PublicAccess.Container)
     queue_service = QueueService(account_name=STORAGE_ACCOUNT_NAME, account_key=STORAGE_ACCOUNT_KEY, endpoint_suffix=STORAGE_ACCOUNT_SUFFIX)
     queue_service.create_queue('fromcamera' + timestr)
+
 
 def main():
     global container_name
@@ -49,6 +51,7 @@ def main():
     __createstorage()
     i = 0
 
+#Setting the stream read path for usb we are taking 0 else the RTSP stream as is 
     if SOURCE is not None:
         if SOURCE == 'usb':
             cap = cv2.VideoCapture(0)
@@ -60,6 +63,8 @@ def main():
     ret = True
 
     print('Created stream')
+    if(MANUAL_MODE):
+        print('Press SPACE to capture or ESC to quit')
     while ret:
         # reading frames 
         ret, frame = cap.read()
@@ -73,6 +78,7 @@ def main():
         if(MANUAL_MODE):
             cv2.namedWindow("Press SPACE to capture or ESC to quit")
             cv2.imshow("Press SPACE to capture or ESC to quit", frame)
+            
             k = cv2.waitKey(1)
             if k%256 == 27:
                 # ESC pressed
