@@ -23,11 +23,6 @@ block_blob_service = None
 queue_service = None
 
 
-
-
-#Parsing command line parameters
-
-
 def __createstorage():
     global container_name
     global queue_service
