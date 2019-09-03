@@ -4,9 +4,9 @@ This script and docker container captures images from RTSP or USB camera connect
 
 ###### Runing using Docker 
        - Clone this repo
-       - **Make sure you modufy the .env file your storgae credentials**
-       - If using manual mode use below command oto allow display to wrk form container 
-              ***sudo xhost +***
+       - Make sure you modufy the .env file your storage credentials
+       - If using manual mode use below command to allow display to work from container 
+              sudo xhost +
        - sudo docker run --rm -it -e DISPLAY=:0 --ipc host -v /tmp/.X11-unix:/tmp/.X11-unix --network host --privileged -v /dev:/dev --env-file .env initmahesh/getimagefromedge:0.1
 
 ###### Runing with python 
