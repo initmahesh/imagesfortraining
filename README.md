@@ -11,11 +11,11 @@ This script and docker container captures images from RTSP or USB camera connect
 
 #### Run with python 
 
- Prerequiste 
-    python3
-    pip3 
+ ######Prerequiste 
+   -  python3
+   -  pip3 
 
- How to run this sample
+ ######How to run this sample
 
    1. Clone this repo
    2. **Update .env file with required setting to run the script**
