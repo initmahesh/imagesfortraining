@@ -6,9 +6,11 @@ RUN apt-get update && \
     python3.5  zip x11-apps lsb-core wget cpio sudo libpng-dev zlib1g-dev udev\
     libnuma1 ocl-icd-libopencl1 clinfo libboost-filesystem1.58.0 libboost-thread1.58.0 && \
     rm -rf /var/lib/apt/lists/*
-RUN pip3 install --upgrade pip setuptools 
+RUN pip3 install --upgrade pip setuptools
 COPY edge_to_blob.py .
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
+# to fix teh issue with ubuntu18.04 as The MIT-SHM is an extension to the X server which allows faster transactions by using shared memory. Docker isolation probably blocks it below disables it 
+ENV QT_X11_NO_MITSHM=1
 CMD [ "python3", "-u", "./edge_to_blob.py" ]
 
