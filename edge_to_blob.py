@@ -12,6 +12,11 @@ STORAGE_ACCOUNT_NAME = os.getenv('STORAGE_ACCOUNT_NAME')
 STORAGE_ACCOUNT_KEY = os.getenv('STORAGE_ACCOUNT_KEY')
 STORAGE_ACCOUNT_SUFFIX = os.getenv('STORAGE_ACCOUNT_SUFFIX')
 
+#strip the end and begining for any whitespaces
+STORAGE_ACCOUNT_NAME = STORAGE_ACCOUNT_NAME.strip()
+STORAGE_ACCOUNT_KEY = STORAGE_ACCOUNT_KEY.strip()
+STORAGE_ACCOUNT_SUFFIX = STORAGE_ACCOUNT_SUFFIX.strip()
+
 #input to take frames support usb and rtsp address  
 SOURCE = os.getenv('SOURCE')
 #time to wait between image uploads as numeric value example 2 will upload an image every 2 secs
@@ -76,8 +81,9 @@ def main():
 
         # starting a window on device if manual mode is selected
         if(MANUAL_MODE):
-            cv2.namedWindow("Press SPACE to capture or ESC to quit")
-            cv2.imshow("Press SPACE to capture or ESC to quit", frame)
+            window_name = "Press SPACE to capture or ESC to quit"
+            cv2.namedWindow(window_name,cv2.WINDOW_AUTOSIZE)
+            cv2.imshow(window_name, frame)
             
             k = cv2.waitKey(1)
             if k%256 == 27:
