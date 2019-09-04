@@ -19,10 +19,13 @@ STORAGE_ACCOUNT_SUFFIX = STORAGE_ACCOUNT_SUFFIX.strip()
 
 #input to take frames support usb and rtsp address  
 SOURCE = os.getenv('SOURCE')
+print("Source is set to :: " + str(SOURCE))
 #time to wait between image uploads as numeric value example 2 will upload an image every 2 secs
-TIME_DELAY = os.getenv('TIME_DELAY')
+TIME_DELAY = int(os.getenv('TIME_DELAY'))
+print("TIME_DELAY is set to :: " + str(TIME_DELAY))
 #manual mode will pop up a window and a picture will be uploaded when SPACE is pressed, press ESC to quit
-MANUAL_MODE = os.getenv('MANUAL_MODE')
+MANUAL_MODE = int(os.getenv('MANUAL_MODE'))
+print("Manual mode set to :: " + str(MANUAL_MODE))
 
 container_name = None 
 queue_service = None
@@ -68,7 +71,7 @@ def main():
     ret = True
 
     print('Created stream')
-    if(MANUAL_MODE):
+    if(MANUAL_MODE == 1):
         print('Press SPACE to capture or ESC to quit')
     while ret:
         # reading frames 
@@ -80,7 +83,7 @@ def main():
             break   
 
         # starting a window on device if manual mode is selected
-        if(MANUAL_MODE):
+        if(MANUAL_MODE == 1):
             window_name = "Press SPACE to capture or ESC to quit"
             cv2.namedWindow(window_name,cv2.WINDOW_AUTOSIZE)
             cv2.imshow(window_name, frame)
