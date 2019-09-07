@@ -7,47 +7,32 @@ from dotenv import load_dotenv
 #reading parametes from .env file 
 load_dotenv()
 
+#Storage account credentials to load files 
 STORAGE_ACCOUNT_NAME = os.getenv('STORAGE_ACCOUNT_NAME')
 STORAGE_ACCOUNT_KEY = os.getenv('STORAGE_ACCOUNT_KEY')
 STORAGE_ACCOUNT_SUFFIX = os.getenv('STORAGE_ACCOUNT_SUFFIX')
+
+#strip the end and begining for any whitespaces
+STORAGE_ACCOUNT_NAME = STORAGE_ACCOUNT_NAME.strip()
+STORAGE_ACCOUNT_KEY = STORAGE_ACCOUNT_KEY.strip()
+STORAGE_ACCOUNT_SUFFIX = STORAGE_ACCOUNT_SUFFIX.strip()
+
+#input to take frames support usb and rtsp address  
+SOURCE = os.getenv('SOURCE')
+#time to wait between image uploads as numeric value example 2 will upload an image every 2 secs
+TIME_DELAY = os.getenv('TIME_DELAY')
+#manual mode will pop up a window and a picture will be uploaded when SPACE is pressed, press ESC to quit
+MANUAL_MODE = os.getenv('MANUAL_MODE')
 
 container_name = None 
 queue_service = None
 block_blob_service = None
 queue_service = None
-manual_mode = None
 
-
-
-#Parsing command line parameters
-parser = argparse.ArgumentParser(description= "This sample takes rtsp stream address as argument and send images to azureblob")
-parser.add_argument('-s','--source',help ='pass the rtsp stream to module or usb dev id eg:- python3 rtsptoblob -s \"rtsp://192.168.0.106:8900/live\" or for usb -s "usb"')
-parser.add_argument('-t','--time_delay',help ='specify time to wait between image uploads as numeric value example -t 2 will upload an image every 2 secs',type=int, default=1)
-parser.add_argument('-m','--manual_mode',help ='setting manual mode will pop up a window end a picture will be uploaded when a SPACE ',type=bool,default=False)
-
-args = parser.parse_args()
-if args.source is not None:
-    capture_url = args.source 
-    if(capture_url == "usb"):
-        capture_url = 0
-        print("capture from usb cam :: " + str(capture_url))
-    else:
-        print("capture url is :: " + capture_url)
-else:
-    print("please pass the rtsp string to prcoess by using parameter -r eg:- python3 rtsptoblob -r \"rtsp://192.168.0.106:8900/live\"")
-    exit
-if args.time_delay is not None:
-    time_delay = args.time_delay
-    print("set time delay to : " + str(time_delay))
-
-if args.manual_mode :
-    manual_mode = args.manual_mode
-    print("set time delay to : " + str(manual_mode))
-
+#this function creates storage container and queue service required 
 def __createstorage():
     global container_name
     global queue_service
-    global capture_url
     global block_blob_service
     global queue_service 
     block_blob_service = BlockBlobService(account_name=STORAGE_ACCOUNT_NAME, account_key=STORAGE_ACCOUNT_KEY, endpoint_suffix=STORAGE_ACCOUNT_SUFFIX)
@@ -58,31 +43,48 @@ def __createstorage():
     queue_service = QueueService(account_name=STORAGE_ACCOUNT_NAME, account_key=STORAGE_ACCOUNT_KEY, endpoint_suffix=STORAGE_ACCOUNT_SUFFIX)
     queue_service.create_queue('fromcamera' + timestr)
 
+
 def main():
     global container_name
     global block_blob_service
     global queue_service
-    global capture_url
+    global SOURCE
     global time 
-    global time_delay
-    global manual_mode
+    global TIME_DELAY
+    global MANUAL_MODE
     #Creating storage with given credentials
     __createstorage()
     i = 0
 
+#Setting the stream read path for usb we are taking 0 else the RTSP stream as is 
+    if SOURCE is not None:
+        if SOURCE == 'usb':
+            cap = cv2.VideoCapture(0)
+        else:
+            cap = cv2.VideoCapture(SOURCE)
+    else:
+        print("Please set the valuse of SOURCE variable in .env file")
 
-    cap = cv2.VideoCapture(capture_url)
     ret = True
 
     print('Created stream')
+    if(MANUAL_MODE):
+        print('Press SPACE to capture or ESC to quit')
     while ret:
         # reading frames 
         ret, frame = cap.read()
+        if(frame is None):
+            print("Unable to capture frame from source :" + SOURCE)
+            print("Please check correct SOURCE variable is set in .env file")
+            ret= False
+            break   
 
-        # starting a window on device if manaul mode is selected
-        if(manual_mode):
-            cv2.namedWindow("Press SPACE to capture or ESC to quit")
-            cv2.imshow("Press SPACE to capture or ESC to quit", frame)
+        # starting a window on device if manual mode is selected
+        if(MANUAL_MODE):
+            window_name = "Press SPACE to capture or ESC to quit"
+            cv2.namedWindow(window_name,cv2.WINDOW_AUTOSIZE)
+            cv2.imshow(window_name, frame)
+            
             k = cv2.waitKey(1)
             if k%256 == 27:
                 # ESC pressed
@@ -102,13 +104,13 @@ def main():
         else:    
             ret, frame = cap.read()
             i+=1
-            print("frame capture function retuned :: " +  str(ret) + " storing to container :: " + container_name)
+            print("frame capture function returned :: " +  str(ret) + " storing to container :: " + container_name)
             image_jpg = cv2.imencode('.jpg',frame)[1].tostring()
             blob_name='image' + str(i) +'.jpg'
             blobprops = block_blob_service.create_blob_from_bytes(container_name, blob_name, image_jpg)
             queueprops = queue_service.put_message(container_name, str(block_blob_service.make_blob_url(container_name, blob_name)))
             print("Total files stored :: " + str(i))
-            time.sleep(time_delay)
+            time.sleep(TIME_DELAY)
     cap.release()
     print('Released stream')
 
