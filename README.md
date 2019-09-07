@@ -1,4 +1,4 @@
-### Project Title
+### ImagesForTraining
 This script and docker container captures images from RTSP or USB camera connected to device and sends images to azure blob as per credentials provided in .env file
 
 #### Run using Docker 
